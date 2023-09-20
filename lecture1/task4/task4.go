@@ -31,6 +31,6 @@ func main() {
 
 	intSlice.Sort()
 
-	fmt.Println("Слайс после сортировки:")
+	fmt.Println("Слайс после сортировки:  ")
 	intSlice.Print()
 }
