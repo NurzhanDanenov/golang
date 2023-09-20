@@ -5,24 +5,24 @@ import (
 	"sort"
 )
 
-type IntegerSlice struct {
+type Slice struct {
 	data []int
 }
 
-func (is *IntegerSlice) Add(values ...int) {
+func (is *Slice) Add(values ...int) {
 	is.data = append(is.data, values...)
 }
 
-func (is *IntegerSlice) Sort() {
+func (is *Slice) Sort() {
 	sort.Ints(is.data)
 }
 
-func (is *IntegerSlice) Print() {
+func (is *Slice) Print() {
 	fmt.Println(is.data)
 }
 
 func main() {
-	intSlice := IntegerSlice{}
+	intSlice := Slice{}
 
 	intSlice.Add(5, 3, 9, 1, 7)
 
