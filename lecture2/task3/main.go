@@ -1,11 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strings"
+	"time"
 )
 
 type Vehicle interface {
-	//	Insurance()
+	Insurance()
 	BuildARoute()
 	Start()
 	Stop()
@@ -15,15 +19,27 @@ type Car struct {
 	Name string
 }
 
-// func (c Car) Insurance() {
-// 	var startDay string
-// 	var endDay string
-// 	fmt.Println("Enter the location from where you want to start your trip")
-// 	fmt.Scan(&yourLocation)
-// 	fmt.Println("Enter your destination")
-// 	fmt.Scan(&destination)
-// 	fmt.Printf("The route has been built for %s.\n", c.Name)
-// }
+func (c Car) Insurance() {
+	reader := bufio.NewReader(os.Stdin)
+	var endDate time.Time
+	var err error // Declare err in the outer scope to capture the Parse error
+
+	for {
+		fmt.Print("Enter the end date of your car insurance (YYYY-MM-DD): ")
+		endDateStr, _ := reader.ReadString('\n')
+		endDateStr = strings.TrimSpace(endDateStr)
+
+		endDate, err = time.Parse("2006-01-02", endDateStr)
+		if err != nil {
+			fmt.Println("Invalid date format. Please use YYYY-MM-DD format.")
+		} else {
+			break
+		}
+	}
+
+	daysUntilExpiration := endDate.Sub(time.Now()).Hours() / 24
+	fmt.Printf("You have %.0f days left before your car insurance expires.\n", daysUntilExpiration)
+}
 
 func (c Car) BuildARoute() {
 	var yourLocation string
@@ -45,6 +61,29 @@ func (c Car) Stop() {
 
 type Bike struct {
 	Name string
+}
+
+func (b Bike) Insurance() {
+	fmt.Println("Riding on a bike can be really dangerous. I suggest for you to check your medical insurance.")
+	reader := bufio.NewReader(os.Stdin)
+	var endDate time.Time
+	var err error // Declare err in the outer scope to capture the Parse error
+
+	for {
+		fmt.Print("Enter the end date of your medical insurance (YYYY-MM-DD): ")
+		endDateStr, _ := reader.ReadString('\n')
+		endDateStr = strings.TrimSpace(endDateStr)
+
+		endDate, err = time.Parse("2006-01-02", endDateStr)
+		if err != nil {
+			fmt.Println("Invalid date format. Please use YYYY-MM-DD format.")
+		} else {
+			break
+		}
+	}
+
+	daysUntilExpiration := endDate.Sub(time.Now()).Hours() / 24
+	fmt.Printf("You have %.0f days left before your medical insurance expires.\n", daysUntilExpiration)
 }
 
 func (b Bike) BuildARoute() {
@@ -73,6 +112,7 @@ func (g Garage) OperateAll() {
 	fmt.Println("Operating all vehicles in the garage:")
 	for _, v := range g.Vehicles {
 		fmt.Printf(" - %T\n", v)
+		v.Insurance()
 		v.BuildARoute()
 		v.Start()
 		v.Stop()
