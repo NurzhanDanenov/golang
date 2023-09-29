@@ -16,30 +16,30 @@ func main() {
 
 	for i := 0; i < num; i++ {
 		go func() {
-			temp := x
+			curr := x
 			//runtime.Gosched()
-			temp++
-			x = temp
+			curr++
+			x = curr
 			wg.Done()
 		}()
 	}
 
 	for i := 0; i < num; i++ {
 		go func() {
-			temp := x
+			curr := x
 			//runtime.Gosched()
-			temp = temp*2 + 1
-			x = temp
+			curr = curr*2 + 1
+			x = curr
 			wg.Done()
 		}()
 	}
 
 	for i := 0; i < num; i++ {
 		go func() {
-			temp := x
+			curr := x
 			//runtime.Gosched()
-			temp = temp - 2
-			x = temp
+			curr = curr - 2
+			x = curr
 			wg.Done()
 		}()
 	}
