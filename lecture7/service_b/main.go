@@ -9,7 +9,6 @@ import (
 )
 
 func ServiceBHandler(w http.ResponseWriter, r *http.Request) {
-	// Запрос данных у сервиса A
 	response, err := http.Get("http://localhost:8080/service_a")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -23,7 +22,6 @@ func ServiceBHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Обработка данных и формирование ответа
 	data := map[string]interface{}{
 		"message":             "This is Service B",
 		"data_from_service_a": dataFromServiceA,
