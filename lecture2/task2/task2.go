@@ -13,24 +13,21 @@ type ListNode struct {
 func main() {
 	list1 := &ListNode{Val: 1, Next: &ListNode{Val: 2, Next: &ListNode{Val: 4}}}
 	list2 := &ListNode{Val: 1, Next: &ListNode{Val: 3, Next: &ListNode{Val: 4}}}
-	mergedList, mergedValues := mergeTwoLists(list1, list2)
+	mergedList := mergeTwoLists(list1, list2)
 	fmt.Println(mergedList)
-	fmt.Println(mergedValues)
 
 	list1 = &ListNode{}
 	list2 = &ListNode{}
-	mergedList, mergedValues = mergeTwoLists(list1, list2)
+	mergedList = mergeTwoLists(list1, list2)
 	fmt.Println(mergedList)
-	fmt.Println(mergedValues)
 
 	list1 = &ListNode{}
 	list2 = &ListNode{Val: 0}
-	mergedList, mergedValues = mergeTwoLists(list1, list2)
+	mergedList = mergeTwoLists(list1, list2)
 	fmt.Println(mergedList)
-	fmt.Println(mergedValues)
 }
 
-func mergeTwoLists(list1 *ListNode, list2 *ListNode) (*ListNode, []int) {
+func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
 	mergedValues := []int{}
 	for list1 != nil {
 		mergedValues = append(mergedValues, list1.Val)
@@ -56,5 +53,5 @@ func mergeTwoLists(list1 *ListNode, list2 *ListNode) (*ListNode, []int) {
 		}
 	}
 
-	return mergedList, mergedValues
+	return mergedList
 }

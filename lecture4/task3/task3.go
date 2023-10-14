@@ -32,5 +32,16 @@ func main() {
 		}(i)
 	}
 
+	go func() {
+		mu.RLock()
+		for i := range myMap {
+			val, ok := myMap[i]
+			if ok {
+				fmt.Printf("Key: %v, Value: %v\n", i, val)
+			}
+		}
+		mu.RUnlock()
+		wg.Done()
+	}()
 	wg.Wait()
 }
