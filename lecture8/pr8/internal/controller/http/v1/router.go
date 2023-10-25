@@ -2,8 +2,9 @@
 package v1
 
 import (
-	"github.com/evrone/go-clean-template/pkg/cache"
 	"net/http"
+
+	"github.com/evrone/go-clean-template/pkg/cache"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"

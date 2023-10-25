@@ -3,9 +3,10 @@ package cache
 import (
 	"context"
 	"encoding/json"
+	"time"
+
 	"github.com/evrone/go-clean-template/internal/entity"
 	"github.com/redis/go-redis/v9"
-	"time"
 )
 
 type User interface {

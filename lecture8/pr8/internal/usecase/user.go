@@ -4,12 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/evrone/go-clean-template/internal/controller/http/v1/dto"
 	"github.com/evrone/go-clean-template/internal/entity"
 	"github.com/golang-jwt/jwt"
 	"github.com/jackc/pgx/v4"
 	"golang.org/x/crypto/bcrypt"
-	"time"
 )
 
 type User struct {

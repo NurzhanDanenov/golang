@@ -3,13 +3,14 @@ package app
 
 import (
 	"fmt"
-	"github.com/evrone/go-clean-template/internal/entity"
-	"github.com/evrone/go-clean-template/pkg/cache"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/evrone/go-clean-template/internal/entity"
+	"github.com/evrone/go-clean-template/pkg/cache"
 
 	"github.com/gin-gonic/gin"
 
