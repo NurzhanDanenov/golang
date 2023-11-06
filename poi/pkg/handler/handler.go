@@ -1,8 +1,17 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"restapi/pkg/service"
+
+	"github.com/gin-gonic/gin"
+)
 
 type Handler struct {
+	services *service.Service
+}
+
+func NewHandler(services *service.Service) *Handler {
+	return &Handler{services: services}
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
@@ -20,4 +29,5 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		userHandler.POST("/register", h.Register)
 		userHandler.POST("/login", h.Login)
 	}
+	return router
 }

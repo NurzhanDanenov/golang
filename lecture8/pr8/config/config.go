@@ -42,7 +42,7 @@ type (
 func NewConfig() (*Config, error) {
 	cfg := &Config{}
 
-	err := cleanenv.ReadConfig("C:/Users/Нуржан/OneDrive/Рабочий стол/Nurzhan/school/programming/go/go/src/assignment/homeworks/lecture8/pr8/config/config.yml", cfg)
+	err := cleanenv.ReadConfig("C:\\Users\\Нуржан\\OneDrive\\Рабочий стол\\Nurzhan\\school\\programming\\go\\go\\src\\assignment\\homeworks\\lecture8\\pr8\\config\\config.yml", cfg)
 	if err != nil {
 		return nil, fmt.Errorf("config error: %w", err)
 	}
