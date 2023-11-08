@@ -8,6 +8,7 @@ import (
 
 type Authorization interface {
 	CreateUser(user meet.User) (int, error)
+	GetUser(email, password string) (meet.User, error)
 }
 
 type Repository struct {

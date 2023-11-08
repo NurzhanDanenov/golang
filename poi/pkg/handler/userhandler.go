@@ -27,5 +27,20 @@ func (h *Handler) Register(ctx *gin.Context) {
 }
 
 func (h *Handler) Login(ctx *gin.Context) {
+	var input meet.Token
 
+	if err := ctx.BindJSON(&input); err != nil {
+		newErrorResponse(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	token, err := h.services.Authorization.GenerateToken(input.Email, input.Password)
+	if err != nil {
+		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, map[string]interface{}{
+		"token": token,
+	})
 }
