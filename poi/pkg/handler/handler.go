@@ -29,5 +29,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		userHandler.POST("/register", h.Register)
 		userHandler.POST("/login", h.Login)
 	}
+
+	apiHandler := router.Group("/api", h.userIdentity)
+	{
+		apiHandler.POST("/", h.createAva)
+	}
 	return router
 }
