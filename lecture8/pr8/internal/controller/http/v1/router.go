@@ -4,8 +4,9 @@ package v1
 import (
 	"net/http"
 
+	"github.com/evrone/go-clean-template/config"
 	"github.com/evrone/go-clean-template/pkg/cache"
-
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	swaggerFiles "github.com/swaggo/files"
@@ -24,10 +25,11 @@ import (
 // @version     1.0
 // @host        localhost:8080
 // @BasePath    /v1
-func NewRouter(handler *gin.Engine, l logger.Interface, u usecase.UserUseCase, uc cache.User) {
+func NewRouter(handler *gin.Engine, l *logger.Logger, u usecase.UserUseCase, uc cache.User, cfg *config.Config) {
 	// Options
-	handler.Use(gin.Logger())
 	handler.Use(gin.Recovery())
+
+	pprof.Register(handler)
 
 	// Swagger
 	swaggerHandler := ginSwagger.DisablingWrapHandler(swaggerFiles.Handler, "DISABLE_SWAGGER_HTTP_HANDLER")
@@ -42,6 +44,6 @@ func NewRouter(handler *gin.Engine, l logger.Interface, u usecase.UserUseCase, u
 	// Routers
 	h := handler.Group("/api/v1")
 	{
-		newUserRoutes(h, u, l, uc)
+		newUserRoutes(h, u, l, uc, cfg)
 	}
 }

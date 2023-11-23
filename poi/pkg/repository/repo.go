@@ -1,14 +1,14 @@
 package repository
 
 import (
-	"restapi/meet"
+	"restapi/internal/entity"
 
 	"github.com/jmoiron/sqlx"
 )
 
 type Authorization interface {
-	CreateUser(user meet.User) (int, error)
-	GetUser(email, password string) (meet.User, error)
+	CreateUser(user entity.User) (int, error)
+	GetUser(email, password string) (entity.User, error)
 }
 
 type Repository struct {

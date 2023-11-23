@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 
-	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/spf13/viper"
 )
 
 type (
@@ -13,6 +13,8 @@ type (
 		HTTP `yaml:"http"`
 		Log  `yaml:"logger"`
 		PG   `yaml:"postgres"`
+		Auth `yaml:"auth"`
+		Jwt  `yaml:"jwt"`
 	}
 
 	// App -.
@@ -28,29 +30,42 @@ type (
 
 	// Log -.
 	Log struct {
-		Level string `env-required:"true" yaml:"log_level"   env:"LOG_LEVEL"`
+		Level string `env-required:"true" yaml:"log_level" mapstructure:"log_level"  env:"LOG_LEVEL"`
 	}
 
 	// PG -.
 	PG struct {
 		PoolMax int    `env-required:"true" yaml:"pool_max" env:"PG_POOL_MAX"`
-		URL     string `env-required:"true"                 env:"PG_URL"`
+		URL     string `env-required:"true" yaml:"url"      env:"PG_URL"`
+	}
+
+	Auth struct {
+		Login    string `mapstructure:"login"`
+		Password string `mapstructure:"pass"`
+	}
+
+	Jwt struct {
+		SecretKey       string `mapstructure:"secret_key"`
+		AccessTokenTTL  int64  `mapstructure:"access_token_ttl"`
+		RefreshTokenTTL int64  `mapstructure:"refresh_token_ttl"`
 	}
 )
 
-// NewConfig returns app config.
-func NewConfig() (*Config, error) {
-	cfg := &Config{}
+func NewViperConfig() (*Config, error) {
+	cfg := Config{}
 
-	err := cleanenv.ReadConfig("C:\\Users\\Нуржан\\OneDrive\\Рабочий стол\\Nurzhan\\school\\programming\\go\\go\\src\\assignment\\homeworks\\lecture8\\pr8\\config\\config.yml", cfg)
-	if err != nil {
-		return nil, fmt.Errorf("config error: %w", err)
+	viper.SetConfigName("config")                                                                                                                             // name of config file (without extension)
+	viper.SetConfigType("yml")                                                                                                                                // REQUIRED if the config file does not have the extension in the name
+	viper.AddConfigPath("C:\\Users\\Нуржан\\OneDrive\\Рабочий стол\\Nurzhan\\school\\programming\\go\\go\\src\\assignment\\homeworks\\lecture8\\pr8\\config") // path to look for the config file in
+	err := viper.ReadInConfig()                                                                                                                               // Find and read the config file
+	if err != nil {                                                                                                                                           // Handle errors reading the config file
+		panic(fmt.Errorf("fatal error config file: %w", err))
 	}
 
-	err = cleanenv.ReadEnv(cfg)
+	err = viper.Unmarshal(&cfg)
 	if err != nil {
 		return nil, err
 	}
 
-	return cfg, nil
+	return &cfg, nil
 }

@@ -2,13 +2,13 @@ package handler
 
 import (
 	"net/http"
-	"restapi/meet"
+	"restapi/internal/entity"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) Register(ctx *gin.Context) {
-	var input meet.User
+	var input entity.User
 
 	if err := ctx.BindJSON(&input); err != nil {
 		newErrorResponse(ctx, http.StatusBadRequest, err.Error())
@@ -27,7 +27,7 @@ func (h *Handler) Register(ctx *gin.Context) {
 }
 
 func (h *Handler) Login(ctx *gin.Context) {
-	var input meet.Token
+	var input entity.Token
 
 	if err := ctx.BindJSON(&input); err != nil {
 		newErrorResponse(ctx, http.StatusBadRequest, err.Error())

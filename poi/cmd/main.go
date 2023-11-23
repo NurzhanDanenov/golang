@@ -2,7 +2,7 @@ package main
 
 import (
 	"os"
-	"restapi/meet"
+	"restapi/internal"
 	"restapi/pkg/handler"
 	"restapi/pkg/repository"
 	"restapi/pkg/service"
@@ -43,7 +43,7 @@ func main() {
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
 
-	srv := new(meet.Server)
+	srv := new(internal.Server)
 	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
 		logrus.Fatalf("error occured while running http server: %s", err.Error())
 

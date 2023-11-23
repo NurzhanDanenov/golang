@@ -15,7 +15,6 @@ type Postgres struct {
 
 // New -.
 func New(url string) (*Postgres, error) {
-
 	db, err := gorm.Open(postgres.Open(url), &gorm.Config{})
 	if err != nil {
 		return nil, err

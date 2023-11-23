@@ -32,7 +32,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	apiHandler := router.Group("/api", h.userIdentity)
 	{
-		apiHandler.POST("/", h.createAva)
+		imageHandler := apiHandler.Group("/images")
+		{
+			imageHandler.POST("/", h.createAva)
+		}
 	}
 	return router
 }

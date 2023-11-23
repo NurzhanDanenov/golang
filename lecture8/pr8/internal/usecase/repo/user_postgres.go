@@ -5,14 +5,19 @@ import (
 
 	"github.com/evrone/go-clean-template/internal/entity"
 	"github.com/evrone/go-clean-template/pkg/postgres"
+	"github.com/opentracing/opentracing-go"
 )
 
-const UsersDBName = "users"
+// UserRepo interface
+type IUserRepo interface {
+	GetUsers(ctx context.Context) ([]*entity.User, error)
+	GetUserByID(ctx context.Context, id int) (user *entity.User, err error)
+	CreateUser(ctx context.Context, user *entity.User) (int, error)
+	GetUserByEmail(ctx context.Context, email string) (*entity.User, error)
+}
 
 type UserRepo struct {
 	*postgres.Postgres
-	// DB      *sql.DB // Your database connection
-	// Builder *sqlbuilder.PostgreSQL
 }
 
 func NewUserRepo(pg *postgres.Postgres) *UserRepo {
@@ -25,11 +30,6 @@ func (ur *UserRepo) GetUsers(ctx context.Context) (users []*entity.User, err err
 		return nil, res.Error
 	}
 	return users, nil
-	// sql, _, err := ur.Builder.
-	// 	Select("id, name, email, age")
-	// 	From("users")
-	// 	ToSql()
-	// if err != nil : nil, fmt
 }
 
 func (ur *UserRepo) CreateUser(ctx context.Context, user *entity.User) (int, error) {
@@ -38,24 +38,12 @@ func (ur *UserRepo) CreateUser(ctx context.Context, user *entity.User) (int, err
 		return 0, res.Error
 	}
 	return user.Id, nil
-	// sql, args, err := ur.Builder.Insert(UsersDBName).Columns("name", "email", "age", "password").
-	// 	Values(user.Name, user.Email, user.Age, user.Password).
-	// 	Suffix("returning id").ToSql()
-	// if err != nil {
-	// 	return 0, err
-	// }
-
-	// var insertedID int
-
-	// err = ur.Pool.QueryRow(ctx, sql, args).Scan(&insertedID)
-	// if err != nil {
-	// 	return 0, err
-	// }
-
-	// return insertedID, nil
 }
 
 func (ur *UserRepo) GetUserByEmail(ctx context.Context, email string) (user *entity.User, err error) {
+	// span, _ := opentracing.StartSpanFromContext(ctx, "get user by email repo")
+	// defer span.Finish()
+
 	res := ur.DB.Where("email = ?", email).WithContext(ctx).Find(&user)
 	if res.Error != nil {
 		return nil, res.Error
@@ -63,7 +51,10 @@ func (ur *UserRepo) GetUserByEmail(ctx context.Context, email string) (user *ent
 	return user, nil
 }
 
-func (ur *UserRepo) GetUserByID(ctx context.Context, id string) (user *entity.User, err error) {
+func (ur *UserRepo) GetUserByID(ctx context.Context, id int) (user *entity.User, err error) {
+	span, _ := opentracing.StartSpanFromContext(ctx, "get user by id - repo")
+	defer span.Finish()
+
 	res := ur.DB.WithContext(ctx).Where("id = ?", id).Find(&user)
 	if res.Error != nil {
 		return nil, res.Error

@@ -1,12 +1,12 @@
 package service
 
 import (
-	"restapi/meet"
+	"restapi/internal/entity"
 	"restapi/pkg/repository"
 )
 
 type Authorization interface {
-	CreateUser(user meet.User) (int, error)
+	CreateUser(user entity.User) (int, error)
 	GenerateToken(email, password string) (string, error)
 	ParseToken(token string) (int, error)
 }

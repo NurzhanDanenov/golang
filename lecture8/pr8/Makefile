@@ -69,10 +69,13 @@ migrate-up: ### migration up
 	migrate -path migrations -database '$(PG_URL)?sslmode=disable' up
 .PHONY: migrate-up
 
-migrate-down: ### migration down
-	migrate -path migrations -database '$(PG_URL)?sslmode=disable' down
-.PHONY: migrate-down
-
 bin-deps:
 	GOBIN=$(LOCAL_BIN) go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 	GOBIN=$(LOCAL_BIN) go install github.com/golang/mock/mockgen@latest
+
+tidy:
+	go mod tidy && go mod vendor
+	
+mocks: 
+	mockery --dir=internal/usecase/repo --name=IUserRepo --filename=user_repository_mocks.go --output=internal/mocks/repomocks --outpkg=repomocks
+	
