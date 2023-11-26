@@ -7,6 +7,7 @@ import (
 )
 
 const UserTable = "users"
+const ImageTable = "images"
 
 type Config struct {
 	Host     string

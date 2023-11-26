@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"errors"
+	"mime/multipart"
 	"net/http"
 	"strings"
 
@@ -32,4 +34,41 @@ func (h *Handler) userIdentity(ctx *gin.Context) {
 	}
 
 	ctx.Set(userCtx, userId)
+}
+
+func (h *Handler) fileUploadMiddleware(c *gin.Context) {
+	file, header, err := c.Request.FormFile("file")
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": "Bad request",
+		})
+		return
+	}
+	defer func(file multipart.File) {
+		err := file.Close()
+		if err != nil {
+
+		}
+	}(file)
+
+	// pass the file and its name to the controller
+	c.Set("filePath", header.Filename)
+	c.Set("file", file)
+
+	// continue to controller
+	c.Next()
+}
+
+func getUserId(c *gin.Context) (int, error) {
+	id, ok := c.Get(userCtx)
+	if !ok {
+		return 0, errors.New("user id not found")
+	}
+
+	idInt, ok := id.(int)
+	if !ok {
+		return 0, errors.New("user id is of invalid type")
+	}
+
+	return idInt, nil
 }

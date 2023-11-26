@@ -11,12 +11,18 @@ type Authorization interface {
 	GetUser(email, password string) (entity.User, error)
 }
 
+type UploadImage interface {
+	UploadImage(id int, image entity.Image) (int, error)
+}
+
 type Repository struct {
 	Authorization
+	UploadImage
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthPostgres(db),
+		UploadImage:   NewUploadImagePostgres(db),
 	}
 }

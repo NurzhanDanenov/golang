@@ -1,6 +1,7 @@
 package service
 
 import (
+	"mime/multipart"
 	"restapi/internal/entity"
 	"restapi/pkg/repository"
 )
@@ -11,8 +12,13 @@ type Authorization interface {
 	ParseToken(token string) (int, error)
 }
 
+type UploadImage interface {
+	Upload(userId int, image entity.Image, file multipart.File, filePath string) (int, error)
+}
+
 type Service struct {
 	Authorization
+	UploadImage
 }
 
 func NewService(repos *repository.Repository) *Service {
