@@ -5,14 +5,30 @@ import (
 	"mime/multipart"
 	"net/http"
 	"restapi/internal/entity"
+	"strconv"
 )
 
 func (h *Handler) createAva(ctx *gin.Context) {
+	file, header, err := ctx.Request.FormFile("file")
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": "Bad request",
+		})
+		return
+	}
+	defer file.Close()
+
+	// pass the file and its name to the controller
+	ctx.Set("filePath", header.Filename)
+	ctx.Set("file", file)
+
+	// another func
 	userId, err := getUserId(ctx)
 	if err != nil {
 		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
 		return
 	}
+
 	var image entity.Image
 
 	filename, ok := ctx.Get("filePath")
@@ -20,14 +36,14 @@ func (h *Handler) createAva(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "filename not found"})
 	}
 
-	file, ok := ctx.Get("file")
+	fileGet, ok := ctx.Get("file")
 	if !ok {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "couldnt find file in request"})
 		return
 	}
 
 	// upload file
-	imageId, err := h.services.UploadImage.Upload(userId, image, file.(multipart.File), filename.(string))
+	imageId, err := h.services.UploadImage.Upload(userId, image, fileGet.(multipart.File), filename.(string))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -36,18 +52,72 @@ func (h *Handler) createAva(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, map[string]interface{}{
 		"id": imageId,
 	})
-	//userId, _ := strconv.Atoi(id)
-	//update := map[string]string{
-	//	"image_url": imageUrl,
-	//}
-	//updatedUser := models.UpdateUser(userId, update)
-	//ctx.JSON(http.StatusOK, gin.H{"data": updatedUser})
-	//return
+}
 
-	//var input entity.Image
-	//if err := ctx.BindJSON(&input); err != nil {
-	//	newErrorResponse(ctx, http.StatusBadRequest, err.Error())
-	//	return
-	//}
+type getAllImagesResponse struct {
+	Data []entity.Image `json:"data"`
+}
 
+func (h *Handler) getAllImages(ctx *gin.Context) {
+	userId, err := getUserId(ctx)
+	if err != nil {
+		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	images, err := h.services.UploadImage.GetAll(userId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, getAllImagesResponse{
+		Data: images,
+	})
+}
+
+func (h *Handler) getImageById(ctx *gin.Context) {
+	userId, err := getUserId(ctx)
+	if err != nil {
+		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		newErrorResponse(ctx, http.StatusBadRequest, "invalid id param")
+		return
+	}
+
+	image, err := h.services.UploadImage.GetById(userId, id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, image)
+}
+
+func (h *Handler) deleteImage(ctx *gin.Context) {
+	userId, err := getUserId(ctx)
+	if err != nil {
+		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		newErrorResponse(ctx, http.StatusBadRequest, "invalid id param")
+		return
+	}
+
+	err = h.services.UploadImage.Delete(userId, id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, statusResponse{
+		Status: "ok",
+	})
 }

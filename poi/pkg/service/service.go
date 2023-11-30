@@ -14,6 +14,9 @@ type Authorization interface {
 
 type UploadImage interface {
 	Upload(userId int, image entity.Image, file multipart.File, filePath string) (int, error)
+	GetAll(userId int) ([]entity.Image, error)
+	GetById(userId, imageId int) (entity.Image, error)
+	Delete(userId, imageId int) error
 }
 
 type Service struct {
@@ -24,5 +27,6 @@ type Service struct {
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(repos.Authorization),
+		UploadImage:   NewUploadImageService(repos.UploadImage),
 	}
 }

@@ -8,6 +8,7 @@ import (
 
 const UserTable = "users"
 const ImageTable = "images"
+const UsersImagesTable = "users_images"
 
 type Config struct {
 	Host     string

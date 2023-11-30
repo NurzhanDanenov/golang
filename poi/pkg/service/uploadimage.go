@@ -42,3 +42,15 @@ func (s *UploadImageServise) Upload(userId int, image entity.Image, file multipa
 	image.Image = result.SecureURL
 	return s.repo.UploadImage(userId, image)
 }
+
+func (s *UploadImageServise) GetAll(userId int) ([]entity.Image, error) {
+	return s.repo.GetAll(userId)
+}
+
+func (s *UploadImageServise) GetById(userId, imageId int) (entity.Image, error) {
+	return s.repo.GetById(userId, imageId)
+}
+
+func (s *UploadImageServise) Delete(userId, imageId int) error {
+	return s.repo.Delete(userId, imageId)
+}

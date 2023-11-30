@@ -13,6 +13,9 @@ type Authorization interface {
 
 type UploadImage interface {
 	UploadImage(id int, image entity.Image) (int, error)
+	GetAll(userId int) ([]entity.Image, error)
+	GetById(userId, imageId int) (entity.Image, error)
+	Delete(userId, imageId int) error
 }
 
 type Repository struct {

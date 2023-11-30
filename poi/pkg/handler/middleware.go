@@ -2,11 +2,9 @@ package handler
 
 import (
 	"errors"
-	"mime/multipart"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
-
-	"github.com/gin-gonic/gin"
 )
 
 const (
@@ -14,49 +12,31 @@ const (
 	userCtx             = "userId"
 )
 
-func (h *Handler) userIdentity(ctx *gin.Context) {
-	header := ctx.GetHeader(authorizationHeader)
+func (h *Handler) userIdentity(c *gin.Context) {
+	header := c.GetHeader(authorizationHeader)
 	if header == "" {
-		newErrorResponse(ctx, http.StatusUnauthorized, "empty auth header")
+		newErrorResponse(c, http.StatusUnauthorized, "empty auth header")
 		return
 	}
 
 	headerParts := strings.Split(header, " ")
-	if len(headerParts) != 2 {
-		newErrorResponse(ctx, http.StatusUnauthorized, "invalid auth header")
+	if len(headerParts) != 2 || headerParts[0] != "Bearer" {
+		newErrorResponse(c, http.StatusUnauthorized, "invalid auth header")
+		return
+	}
+
+	if len(headerParts[1]) == 0 {
+		newErrorResponse(c, http.StatusUnauthorized, "token is empty")
 		return
 	}
 
 	userId, err := h.services.Authorization.ParseToken(headerParts[1])
 	if err != nil {
-		newErrorResponse(ctx, http.StatusUnauthorized, err.Error())
+		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return
 	}
 
-	ctx.Set(userCtx, userId)
-}
-
-func (h *Handler) fileUploadMiddleware(c *gin.Context) {
-	file, header, err := c.Request.FormFile("file")
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": "Bad request",
-		})
-		return
-	}
-	defer func(file multipart.File) {
-		err := file.Close()
-		if err != nil {
-
-		}
-	}(file)
-
-	// pass the file and its name to the controller
-	c.Set("filePath", header.Filename)
-	c.Set("file", file)
-
-	// continue to controller
-	c.Next()
+	c.Set(userCtx, userId)
 }
 
 func getUserId(c *gin.Context) (int, error) {
@@ -72,3 +52,23 @@ func getUserId(c *gin.Context) (int, error) {
 
 	return idInt, nil
 }
+
+//func (h *Handler) FileUploadMiddleware() gin.HandlerFunc {
+//	return func(c *gin.Context) {
+//		file, header, err := c.Request.FormFile("file")
+//		if err != nil {
+//			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+//				"error": "Bad request",
+//			})
+//			return
+//		}
+//		defer file.Close()
+//
+//		// pass the file and its name to the controller
+//		c.Set("filePath", header.Filename)
+//		c.Set("file", file)
+//
+//		// continue to controller
+//		c.Next()
+//	}
+//}

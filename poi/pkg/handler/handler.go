@@ -34,7 +34,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		imageHandler := apiHandler.Group("/images")
 		{
-			imageHandler.POST("/", h.fileUploadMiddleware, h.createAva)
+			imageHandler.POST("/", h.createAva)
+			imageHandler.GET("/", h.getAllImages)
+			imageHandler.GET("/:id", h.getImageById)
+			imageHandler.DELETE("/:id", h.deleteImage)
 		}
 	}
 	return router
