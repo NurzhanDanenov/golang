@@ -6,6 +6,8 @@ import (
 	"restapi/pkg/repository"
 )
 
+//go:generate mockgen -source=service.go -destination=mocks/mocks_test.go
+
 type Authorization interface {
 	CreateUser(user entity.User) (int, error)
 	GenerateToken(email, password string) (string, error)
