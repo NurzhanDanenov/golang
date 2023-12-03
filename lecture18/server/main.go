@@ -12,7 +12,6 @@ import (
 
 type server struct{}
 
-// *DataRequest, StreamingService_GetDataStreamingServer) error
 func (s server) GetDataStreaming(req *pb.DataRequest, srv pb.StreamingService_GetDataStreamingServer) error {
 	log.Println("Fetch data streaming")
 
@@ -44,14 +43,12 @@ func randStringBytes(n int) string {
 }
 
 func main() {
-	// create listener
 	listener, err := net.Listen("tcp", "localhost:8080")
 
 	if err != nil {
 		panic("error building server: " + err.Error())
 	}
 
-	// create gRPC server
 	s := grpc.NewServer()
 	pb.RegisterStreamingServiceServer(s, server{})
 

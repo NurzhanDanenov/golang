@@ -12,7 +12,6 @@ import (
 )
 
 func main() {
-	// dial to server
 	conn, err := grpc.Dial("localhost:8080", grpc.WithInsecure())
 
 	if err != nil {
@@ -21,13 +20,12 @@ func main() {
 
 	defer conn.Close()
 
-	// create the stream
 	client := pb.NewStreamingServiceClient(conn)
 
 	req := pb.DataRequest{Id: "123"}
 	stream, err := client.GetDataStreaming(context.Background(), &req)
 	if err != nil {
-		panic(err) // dont use panic in your real project
+		panic(err)
 	}
 
 	for {
@@ -40,7 +38,7 @@ func main() {
 		}
 
 		if err != nil {
-			panic(err) // dont use panic in your real project
+			panic(err)
 		}
 
 	}
