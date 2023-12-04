@@ -1,11 +1,12 @@
 package handler
 
 import (
-	"github.com/gin-gonic/gin"
 	"mime/multipart"
 	"net/http"
 	"restapi/internal/entity"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) createAva(ctx *gin.Context) {

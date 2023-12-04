@@ -2,13 +2,14 @@ package handler
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/assert"
 	"net/http/httptest"
 	"restapi/pkg/service"
 	service_mocks "restapi/pkg/service/mocks"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHandler_userIdentity(t *testing.T) {

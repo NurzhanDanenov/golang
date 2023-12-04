@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"restapi/pkg/service"
 
 	"github.com/gin-gonic/gin"
@@ -38,6 +39,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			imageHandler.GET("/", h.getAllImages)
 			imageHandler.GET("/:id", h.getImageById)
 			imageHandler.DELETE("/:id", h.deleteImage)
+			imageHandler.GET("/metrics", gin.WrapH(promhttp.Handler()))
 		}
 	}
 	return router

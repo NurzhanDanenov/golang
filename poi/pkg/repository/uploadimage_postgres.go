@@ -2,8 +2,9 @@ package repository
 
 import (
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"restapi/internal/entity"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type UploadImagePostgres struct {

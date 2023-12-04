@@ -3,14 +3,15 @@ package handler
 import (
 	"bytes"
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/golang/mock/gomock"
-	"github.com/magiconair/properties/assert"
 	"net/http/httptest"
 	"restapi/internal/entity"
 	"restapi/pkg/service"
 	mock_service "restapi/pkg/service/mocks"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/golang/mock/gomock"
+	"github.com/magiconair/properties/assert"
 )
 
 func TestHandler_signUp(t *testing.T) {
