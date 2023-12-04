@@ -1,0 +1,23 @@
+#remider: should be in gitignore
+app:
+  name: 'go-clean-template'
+  version: '1.0.0'
+
+http:
+  port: '8080'
+
+log:
+  level: 'debug'
+
+pg:
+  poolmax: 2
+  url : 'postgres://postgres:postgres@localhost:5432/postgres'
+
+auth:
+  login: 'madyar'
+  pass: 'mypass'
+  
+jwt: 
+  secret_key: auth_secret
+  access_token_ttl: 900
+  refresh_token_ttl: 1800
